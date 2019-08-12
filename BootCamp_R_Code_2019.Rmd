@@ -1,0 +1,1335 @@
+---
+title: "KSU Data Science Programming Boot Camp 2019 - R"
+output: html_notebook
+---
+# Part 1: Introduction
+
+======================================
+
+#### 1.1 R and RStudio Overview
+#### 1.2 Download and Install R
+#### 1.3 Download and Install RStudio
+#### 1.4 R Notebook Overview
+#### 1.5 Install R Packages
+#### 1.6 Getting Help in R
+
+======================================
+
+#### 1.1 R and RStudio Overviews
+
+##### R
+https://www.r-project.org 
+
+- A language and environment for statistical computing and graphics
+
+- Open Source under GNU General Public License
+
+- Packages for a wide variety of statistical and graphic techniques: linear and nonlinear modelling, statistical tests, time series analysis, classification, clustering, etc.
+
+##### RStudio
+https://www.rstudio.com/products/rstudio/#Desktop
+
+- Integrated Development Environment (IDE) for R from a commercial vendor
+
+- Requires R to be installed first
+
+- Free version available
+
+##### R Packages
+https://cran.r-project.org/web/packages/available_packages_by_name.html
+
+- Collections of functions and data sets developed by the community 
+
+- CRAN is a network of ftp and web servers around the world that store identical, up-to-date, versions of code and documentation for R.
+
+##### R Applicaitons
+
+- Statistical Computing
+
+- Graphics
+
+- Machine Learning Advance
+
+#### 1.2 Download and Install R
+
+R can downloaded from 
+https://cran.r-project.org
+
+Follow installation instructions on the download page.
+
+#### 1.3 Download and Install RStudio
+
+RStudio can be downloaded from
+https://www.rstudio.com/products/rstudio/download/
+
+Follow installation instructions on the download page.
+
+#### 1.4 R Notebook Overview
+
+Documentation: 
+http://rmarkdown.rstudio.com/r_notebooks.html#overview
+
+It’s a feature of RStudio. 
+
+- Create a Notebook
+
+- Insert Chunks
+
+- Execute Code
+
+Use the green triangle button on the toolbar of a code chunk that has the tooltip “Run Current Chunk”, or Ctrl + Shift + Enter (macOS: Cmd + Shift + Enter) to run the current chunk.
+
+Press Ctrl + Enter (macOS: Cmd + Enter) to run just the current statement. Running a single statement is much like running an entire chunk consisting only of that statement.
+
+There are other ways to run a batch of chunks if you click the menu Run on the editor toolbar, such as Run All, Run All Chunks Above, and Run All Chunks Below.
+
+- Chunk Output
+
+- Notebook HTML File
+
+#### 1.5 Install R Packages
+
+```{r}
+# install the package ISwR for Introductory Statistics with R
+# documentation: https://www.rdocumentation.org/packages/ISwR/versions/2.0-7
+install.packages("ISwR")
+```
+
+```{r}
+# install the package only if it is not installed
+if (!require(ISwR)) { 
+  install.packages("ISwR")
+} 
+```
+
+```{r}
+# load the package ISwR
+library(ISwR)
+```
+
+```{r}
+# retrieve description of a package
+packageDescription("ISwR")
+```
+
+#### 1.6 Getting Help in R
+
+```{r}
+# get the function description and usage
+?plot
+```
+
+```{r}
+# search related packages
+help.search('regression')
+```
+
+# Part 2: Importing, Exporting, Manipulation
+
+======================================
+
+#### 2.1 Read Data from csv File into R
+#### 2.2 Examine the Structure of the Dataset
+#### 2.3 Clean Data
+#### 2.4 Transform and Discretize Variables
+#### 2.5 Subset the Dataset 
+#### 2.6 Work with Other File Formats
+
+======================================
+
+#### 2.1 Read Data from csv File into R
+##### Dataset
+
+NOTCLEAN1A.csv
+
+NOTCLEAN1B.csv
+
+NOTCLEAN1C.csv
+
+CLEAN1A.csv
+
+CLEAN1B.csv
+
+CLEAN1C.csv
+
+Variables in NOTCLEAN1A.csv and CLEAN1A.csv -- 
+
+MATCHKEY: unique customer id
+
+AGE: customer's age
+
+TRADES: number of accounts on file
+
+RBAL: total balance on revolving account
+
+Variables in NOTCLEAN1B.csv and CLEAN1B.csv -- 
+
+MATCHKEY: unique customer id
+
+DELQID: delinquency number
+
+CRELIM: credit limit
+
+goodbad: binary version of DELQID (only in CLEAN1B.csv)
+
+Variables in NOTCLEAN1C.csv and CLEAN1C.csv --  
+
+MATCHKEY: unique customer id
+
+BRNEW: age of the newest bank revolving account
+
+BRAGE: age of the oldest bank revolving account
+
+##### set working directory (replace this by your own working directory)
+
+```{r}
+# check the current work directory
+getwd()
+```
+
+```{r}
+# if the data files are in the same directory with this code script, we can skip this step
+# specify the path of the working directory where the data files exist
+# to find the directory path, follow the following tutorials
+# windows: http://in5stepstutorials.com/windows-7/copy-file-path-folder-path-in-windows-7-8-10.php
+# mac: http://osxdaily.com/2013/06/19/copy-file-folder-path-mac-os-x/
+path <- "/Users/lilizhang/OneDrive - Kennesaw State University/BOOTCAMP/BootCamp_R_2019"
+# set the specified path as the working directory
+setwd(path)
+# get the description and usage of the function setwd()
+?setwd
+```
+
+##### read the data from csv file into R
+```{r}
+# pass the data file name "NOTCLEAN1A.csv" to the function read.csv()
+# specify the parameter header=TRUE, because there are column names in the 1st line of the csv file. Then the function will read the 1st line as the column/variable names instead of data values
+# use the variable notclean1a to store the data set
+notclean1a <- read.csv("NOTCLEAN1A.csv", header = TRUE)
+# get the description and usage of the function read.csv()
+?read.csv
+```
+
+#### 2.2 Examine the Structure of the Dataset
+
+##### check the data structure storing the dataset
+```{r}
+# pass the variable storing the data set to the function class() check its data structure
+# data frame is one of most common data structures in R to perform data analysis. Think about it as a table which has rows and columns
+class(notclean1a)
+# get the description and usage of the function class()
+?class 
+```
+
+##### check the dimension of the data frame(i.e. the number of rows and columns)
+```{r}
+# pass the variable storing the data set to the function dim() to check the dimension of the data frame
+# here 1000 rows/observations and 4 columns/variables
+dim(notclean1a)
+# get the description and usage of the function dim()
+?dim 
+```
+##### check the variables and their types
+```{r}
+# pass the variable storing the data set to the function str() to check the variables and their types
+# here all variables are int (integer) values 
+str(notclean1a)
+# get the description and usage of the function str()
+?str
+```
+##### preview the first 5 rows of the dataset
+```{r}
+# pass the variable storing the data set to the function head()
+# in the 2nd parameter, specify the number of rows to display
+head(notclean1a, 5)
+?head
+```
+
+
+#### 2.3 Clean Data
+
+##### access a variable from the dataset
+
+```{r}
+# in R, use DATASET_NAME$VARIABLE_NAME to access a variable from the dataset
+# don't run this code when the data set is large, because it takes lots of memory to print out all values
+# here just show how to access a variable from the dataset
+notclean1a$AGE
+```
+
+##### calculate the mean of a variable in the dataset 
+```{r}
+# pass a variable in a data set to calculate its mean 
+# but getting NA, because of missing values 
+# so remove missing values in order to calculate the mean in the next step
+mean(notclean1a$AGE)
+```
+##### remove missing values to calculate the mean
+```{r}
+# in the 2nd parameter, specify na.rm=TRUE to exclude those missing values when calculating its mean
+mean(notclean1a$AGE, na.rm = TRUE)
+?mean
+```
+
+##### check the number of missing values of all variables in the dataset
+```{r}
+# first pass the variable storing the data set to the function is.na() to check each value in the data set whether it's missing value or not
+# then use the function colSums() to count the number of missing values
+colSums(is.na(notclean1a))
+```
+
+##### check the summary of the dataset
+```{r}
+# use the function summary() to get simple statistics of each variable
+summary(notclean1a)
+```
+
+##### impute missing values
+```{r}
+# install the package only if it is not installed
+if (!require(Hmisc)) { 
+  install.packages("Hmisc")
+} 
+```
+
+```{r}
+library(Hmisc)
+```
+
+```{r}
+# good practice: create a copy of the original data, and make changes on the copy instead of the original data
+notclean1a_imputed <- notclean1a
+```
+
+```{r}
+?impute
+```
+
+```{r}
+# impute each variable individually by its mean or median
+
+# impute missing values in AGE by its mean
+notclean1a_imputed$AGE_imputed_mean <- with(notclean1a_imputed, impute(AGE, mean))
+# impute missing values in TRADES by its median
+notclean1a_imputed$TRADES_imputed_median <- with(notclean1a_imputed, impute(TRADES, median))
+# impute missing values in RBAL randomly
+notclean1a_imputed$RBAL_imputed_random <- with(notclean1a_imputed, impute(RBAL, 'random'))
+```
+
+```{r}
+notclean1a_imputed$AGE_imputed_mean
+```
+
+```{r}
+# double check to verify there is no NAs now
+summary(notclean1a_imputed)
+```
+```{r}
+#impute missing values by some specific value other than mean or median
+# for example, impute missing values in AGE by 20
+notclean1a_imputed$AGE_imputed_20 <- with(notclean1a_imputed, impute(AGE, c(20)))
+```
+
+```{r}
+# double check to verify 
+notclean1a_imputed$AGE_imputed_20 
+```
+```{r}
+# another option: remove rows with missing values in a dataset
+# tip: usually do Missing Completely at Random (MCAR) analysis before this
+# use the function na.omit() remove rows with missing values in a dataset
+notclean1a_dropped <- na.omit(notclean1a)
+# get the description and usage of the function na.omit()
+?na.omit
+```
+
+```{r}
+# double check to verify there is no NAs
+colSums(is.na(notclean1a_dropped))
+```
+
+```{r}
+class(notclean1a_dropped)
+```
+
+```{r}
+# as shown earlier, there are 213 rows with missing values in the data set. so now 787 rows are left
+dim(notclean1a_dropped)
+```
+```{r}
+# variables will stay the same
+colnames(notclean1a_dropped)
+```
+##### impute coded/abnormal values 
+```{r}
+# by checking the summary, we may notice that max of RBAL is 9999999 which is much larger than 3rd Qu.. This means 9999999 is extreme value
+summary(notclean1a_imputed)
+```
+```{r}
+# use the function hist() to plot the histogram of RBAL in the data set notclean1a
+hist(notclean1a_imputed$RBAL)
+```
+```{r}
+# first replace values larger than 2000000 to be NA
+notclean1a_imputed$RBAL_imputed_random_outlier <- notclean1a_imputed$RBAL_imputed_random
+notclean1a_imputed$RBAL_imputed_random_outlier[notclean1a_imputed$RBAL_imputed_random_outlier>=2000000] <- NA
+# then impute missing values (NAs) as done above
+```
+
+```{r}
+# now the max of RBAL becomes 91447
+summary(notclean1a_imputed)
+```
+
+```{r}
+# impute missing values in RBAL randomly
+notclean1a_imputed$RBAL_imputed_random_outlier <- with(notclean1a_imputed, impute(RBAL_imputed_random_outlier, 'random'))
+```
+
+```{r}
+summary(notclean1a_imputed)
+```
+
+#### 2.4 Transform and Discretize Variables
+##### transform variables
+
+```{r}
+boxplot(as.numeric(notclean1a_imputed$TRADES))
+```
+
+```{r}
+# compute the log transformation 
+notclean1a_imputed$TRADES_imputed_median_log <- log(notclean1a_imputed$TRADES_imputed_median)
+?log
+```
+
+
+```{r}
+boxplot(as.numeric(notclean1a_imputed$TRADES_imputed_median_log))
+```
+```{r}
+head(notclean1a_imputed, 5)
+```
+
+##### discretize variables
+
+```{r}
+# install the package only if it is not installed
+if (!require(arules)) { 
+  install.packages("arules")
+} 
+```
+
+```{r}
+library(arules)
+```
+
+###### unsupervised discretization
+
+```{r}
+notclean1a_imputed$AGE_imputed_mean_cat_interval <- discretize(notclean1a_imputed$AGE_imputed_mean, method = "interval", breaks = 3)
+```
+
+```{r}
+?discretize
+```
+
+```{r}
+notclean1a_imputed$AGE_imputed_mean_cat_interval
+```
+
+```{r}
+notclean1a_imputed$AGE_imputed_mean_cat_interval2 <- discretize(notclean1a_imputed$AGE_imputed_mean, method = "interval", breaks = 3, right = TRUE)
+```
+
+```{r}
+notclean1a_imputed$AGE_imputed_mean_cat_interval2
+```
+
+```{r}
+notclean1a_imputed$AGE_imputed_mean_cat_interval3 <- discretize(notclean1a_imputed$AGE_imputed_mean, method = "interval", breaks = 3, right = TRUE, labels = c(1,2,3))
+```
+
+```{r}
+notclean1a_imputed$AGE_imputed_mean_cat_interval3
+```
+
+
+```{r}
+# first compute the min
+min(notclean1a_imputed$AGE_imputed_mean)
+```
+
+```{r}
+# then compute the max
+max(notclean1a_imputed$AGE_imputed_mean)
+```
+
+```{r}
+notclean1a_imputed$AGE_imputed_mean_cat_fixed <- discretize(notclean1a_imputed$AGE_imputed_mean, method = "fixed", breaks=c(19, 40, 50, 100))
+```
+
+```{r}
+notclean1a_imputed$AGE_imputed_mean_cat_fixed
+```
+
+###### supervised discretization
+https://blog.revolutionanalytics.com/2015/03/r-package-smbinning-optimal-binning-for-scoring-modeling.html
+
+#### 2.5 Subset the Dataset
+##### subset observations
+
+```{r}
+# use the function subset() to only retrieve observations where AGE equals 99
+subset_obs <- subset(notclean1a_imputed, AGE==99)
+# display the subset
+subset_obs
+# get the description and usage of the data set
+?subset
+```
+
+##### drop or keep variables in the dataset
+```{r}
+# in the 2nd parameter, specify the columns to keep
+# here AGE and RBAL
+subset_vars <- subset(notclean1a_imputed, select=c(AGE, RBAL))
+# display the subset
+subset_vars 
+# get the description and usage of the function c()
+?c
+```
+
+##### generate a random sample of the dataset
+
+```{r}
+# install the package only if it is not installed
+if (!require(mosaic)) { 
+  install.packages("mosaic")
+} 
+```
+
+
+```{r}
+library(mosaic)
+```
+
+```{r}
+# set random seed
+set.rseed(12345)
+# store those 10 samples in a data frame variable named sample
+sample <- resample(notclean1a_imputed, size=10, replace=FALSE, orig.id=FALSE)
+# display sample
+sample
+```
+
+#### 2.6 Save Data from R into csv File
+##### save the data from R into csv file
+
+```{r}
+# save the data frame named sample to the local file sample.csv
+write.csv(sample, file = "sample.csv",row.names=FALSE)
+# get the description and usage of the function write.csv()
+?write.csv
+```
+
+#### 2.7 Work with Other File Formats
+
+- Text file
+
+- Excel
+
+- SAS data file
+
+- SPSS data file
+
+- HTML
+
+- MySQL database
+
+# Part 3: Scraping
+
+======================================
+
+#### 3.1 CSV File Online
+#### 3.2 HTML Table
+#### 3.3 Web API
+
+======================================
+
+#### 3.1 CSV File Online
+```{r}
+# pass the url to the function read.csv()
+# save the Master.csv to the data frame variable named help
+master <- read.csv("https://nhorton.people.amherst.edu/r2/datasets/Master.csv")
+```
+
+```{r}
+# display the first 5 rows
+head(master, 5)
+```
+#### 3.2 HTML Table
+
+```{r}
+# install the package only if it is not installed
+if (!require(XML)) { 
+  install.packages("XML")
+} 
+```
+
+```{r}
+library(RCurl)
+```
+
+```{r}
+library(XML)
+```
+
+
+```{r}
+# specify the url where the table is
+url <- "https://en.wikipedia.org/wiki/World_population"
+# dowload url
+xData <- getURL(url)
+?getURL
+```
+
+```{r}
+# retrieve the table elements from the url
+tbls_xml <- readHTMLTable(xData)
+?readHTMLTable
+```
+
+```{r}
+# by examining stored values, we can see [3] is the table name we want to access
+names(tbls_xml)
+?names
+```
+
+```{r}
+# access the 3rd element to get the table data
+table <- tbls_xml[[3]]
+# display the first 5 rows
+head(table, 5)
+```
+
+```{r}
+class(table)
+```
+
+```{r}
+# rename columns
+names(table) <- c("Continent", "Density(inhabitants/km2)", "Population(millions)", "Most populous country", "Most populous city (metropolitan area)")
+```
+
+```{r}
+# double check to verify
+head(table, 5)
+```
+
+```{r}
+# drop 1st row by specifying the row number in the function -c()
+table <- table[-c(1), ]
+```
+
+```{r}
+head(table, 5)
+```
+
+#### 3.3 Web API
+
+```{r}
+# install the package only if it is not installed
+if (!require(twitteR)) { 
+  install.packages("twitteR")
+} 
+```
+
+```{r}
+library(httr)
+library(devtools)
+library(twitteR)
+```
+
+```{r}
+# replace all these credentials by your own
+# to get credentials, follow the tutorial https://medium.com/@GalarnykMichael/accessing-data-from-twitter-api-using-r-part1-b387a1c7d3e
+consumer_key <- "puxmqW5Fb9zV3wddFzwGYmcCj"
+consumer_secret <- "rtP4AYjMxvaKIzIl2a9JNBP26cnBHYJQb7H35cpcHuQC0tEzVY"
+access_token <- "2607567668-XhrG0Ywtzh13FgcSgzobhAIqz1KrG0w4xJNxRQ3"
+access_secret <- "xOhkVZQrIwfJnxR865B51rgNq1tqLb7WDVRRGmoIiMFbp"
+```
+
+```{r}
+# pass credentials to the function setup_twitter_oauth() to connect to twitter API
+setup_twitter_oauth(consumer_key, consumer_secret, access_token, access_secret)
+```
+
+```{r}
+# specify query keyword, the number of tweets to query, tweet language, tweet within certain time period
+tw = searchTwitter("data science", n=100, lang='en', since = "2019-08-04", until = "2019-08-05")
+# get the description and usage of the function searchTwitter()
+?searchTwitter
+```
+
+```{r}
+# convert the retrieved tweets to a dataframe
+d = twListToDF(tw)
+# get the description and usage of the function twListToDF()
+?twListToDF
+```
+
+```{r}
+# check all columns
+colnames(d)
+```
+
+```{r}
+# display the first 5 rows
+head(d,5)
+```
+
+```{r}
+# save the queried tweets to a local file named tw.csv
+write.csv(d, file = "tw.csv", row.names=FALSE)
+```
+
+# Part 4: Data Management
+
+======================================
+
+#### 4.1 Merge & Append
+#### 4.2 Matrix Algebra
+#### 4.3 Statistical Functions
+
+======================================
+
+##### Preparation 
+```{r}
+# set the working directory
+setwd("/Users/lilizhang/OneDrive - Kennesaw State University/BOOTCAMP/BootCamp_R_2019")
+# load the datasets
+clean1a <- read.csv("CLEAN1A.csv", header = TRUE)
+clean1b <- read.csv("CLEAN1B.csv", header = TRUE)
+notclean1a <- read.csv("NOTCLEAN1A.csv", header = TRUE)
+notclean1b <- read.csv("NOTCLEAN1B.csv", header = TRUE)
+```
+
+#### 4.1 Merge/Append
+
+##### Merge: to add variables/columns.
+
+- At least one common variable is required when two datasets are merging. 
+
+- Function: merge()
+
+reference: http://www.datasciencemadesimple.com/join-in-r-merge-in-r/
+
+##### Merge clean1a and clean1b horizontally
+
+```{r}
+head(clean1a)
+```
+
+```{r}
+head(clean1b)
+```
+
+
+```{r}
+# Inner join
+inner_merged <- merge(clean1a, clean1b, by="MATCHKEY") 
+head(inner_merged)
+```
+```{r}
+?merge
+```
+
+```{r}
+dim(inner_merged)
+```
+
+```{r}
+# Left join
+left_merged <- merge(clean1a, clean1b, by="MATCHKEY", all.x = TRUE) 
+head(left_merged)
+# Right join --> all.y = TRUE
+```
+
+```{r}
+dim(left_merged)
+```
+
+```{r}
+# right join
+right_merged <- merge(clean1a, clean1b, by="MATCHKEY", all.y = TRUE) 
+head(right_merged)
+```
+
+```{r}
+dim(right_merged)
+```
+
+```{r}
+# Outer join --> all=TRUE
+outer_merged <- merge(clean1a, clean1b, by="MATCHKEY", all=TRUE) 
+head(outer_merged)
+```
+
+```{r}
+dim(outer_merged)
+```
+
+##### Append: to add observations/rows.
+
+- Variables should have exactly the same name when two datasets are appending.
+
+- Function: rbind()
+
+##### Join clean1a and notclean1a vertically
+```{r}
+nrow(clean1a)
+nrow(notclean1a)
+combine <- rbind(clean1a, notclean1a)
+nrow(combine)
+```
+#### 4.2 Matrix Algebra
+
+##### Inputting a matrix into R
+
+- cbind(): to append columns together
+
+- rbind(): to append rows together
+
+- matrix(): to create a matrix from an input vector
+
+##### Various Matrix Operations
+
+- Transpose operator: t()
+
+- Inverse: solve()   
+		
+- Determinant of a matrix: det()
+
+- diag(): to return the vector of diagonal elements if used on a matrix; to returns a matrix with 0’s off-diagonal and the input vector on the diagonal if used on a vector
+
+##### Example
+```{r}
+A <- matrix(1:9, nrow = 3, byrow = TRUE)
+A
+print('diag of a matrix')
+diag(A)
+
+print('diag of a vector')
+B <- diag(diag(A)) 
+B
+
+print('matrix addition: A + B')
+A + B
+print('matrix subtraction: A - B')
+A - B
+print('matrix multiplication: A %*% B')
+A %*% B
+print('elementwise multiplication: A * B')
+A * B
+print('transpose of A')
+t(A)
+print('inverse of B')
+solve(B)
+print('determinant of A')
+det(A)
+```
+#### 4.3 Statistical Functions
+
+- mean(), sd(), var(), median(), min(), max(), quantile()
+
+- to generate random variables: rnorm(), rbinom(), etc.
+
+- to calculate probabilities: dnorm(), dbinom(), etc.
+
+- to calculate cumulative probabilities: pnorm(), pbinom(), etc.
+
+- to determine quantiles/percentiles/critical values: qnorm(), etc.
+
+```{r}
+sd(clean1a$AGE)
+```
+
+```{r}
+var(clean1a$AGE)
+```
+
+```{r}
+# quantile function
+quantile(clean1a$AGE)
+
+quantile(clean1a$AGE, c(0.025, 0.975))
+```
+
+reference: http://seankross.com/notes/dpqr/
+
+```{r}
+# probablity distributions
+rnorm(5, mean=0, sd=1)
+rnorm(5,mean=20, sd=4) 
+?rnorm
+```
+```{r}
+# The function dnorm returns the value of the probability density function for the normal distribution given parameters
+dnorm(0,  mean=0, sd=1) 
+```
+
+```{r}
+# What is the Z-score of the pth quantile of the normal distribution?
+qnorm(0.95, mean=0, sd=1)
+```
+
+```{r}
+# The function pnorm returns the integral from −∞ to q of the pdf of the normal distribution where q is a Z-score.
+pnorm(1, mean=0, sd=1)
+pnorm(1,mean=0, sd=1, lower=FALSE) # the lower=FALSE option to get the probability that X ≥ x
+?pnorm
+```
+
+
+# Part 5: Data Exploratory Analysis
+
+======================================
+
+#### 5.1 Univariate Analysis
+#### 5.2 Bivariate Analysis
+
+======================================
+
+```{r}
+head(inner_merged)
+```
+
+```{r}
+str(inner_merged)
+```
+
+```{r}
+describe(inner_merged)
+```
+
+#### 5.1 Univariate Analysis
+
+##### continuous variable
+```{r}
+hist(inner_merged$TRADES)
+```
+
+```{r}
+hist(inner_merged$TRADES, breaks=50, xlab = "TRADES", freq = FALSE, main = "Distribution of TRADES")
+```
+
+```{r}
+plot(density(inner_merged$TRADES, na.rm = TRUE), main="Density Plot of TRADES")
+```
+
+```{r}
+boxplot(inner_merged$TRADES, ylab="Age", main="Boxplot of TRADES")
+```
+
+```{r}
+boxplot(inner_merged$TRADES, log="y", ylab="Log of TRADES", main="Boxplot of Log of TRADES")
+```
+##### categorical variable
+```{r}
+table(inner_merged$goodbad)
+```
+
+```{r}
+pie(table(inner_merged$goodbad))
+```
+
+```{r}
+barplot(table(inner_merged$goodbad))
+```
+#### 5.2 Bivariate Analysis
+##### Two Categorical Variables
+```{r}
+table(inner_merged$goodbad,inner_merged$DELQID)
+```
+
+```{r}
+#reference: http://www.r-tutor.com/elementary-statistics/goodness-fit/chi-squared-test-independence
+chisq.test(inner_merged$goodbad,inner_merged$DELQID)
+?chisq.test
+```
+
+```{r}
+tbl = table(inner_merged$goodbad,inner_merged$DELQID)
+```
+
+```{r}
+tbl = table(inner_merged$goodbad,inner_merged$DELQID)
+ctbl = cbind(tbl[,"0"], tbl[,"1"], tbl[,"2"], tbl[,"3"] + tbl[,"4"]++ tbl[,"5"]++ tbl[,"6"], tbl[,"7"]) 
+```
+
+```{r}
+chisq.test(ctbl)
+```
+
+##### Two Continuous Variables
+```{r}
+plot(inner_merged$RBAL, inner_merged$CRELIM)
+```
+
+```{r}
+cor(inner_merged$RBAL, inner_merged$CRELIM)
+```
+
+```{r}
+cor(inner_merged)
+```
+
+
+##### One Continuous Variable and One Categorical Variable
+
+```{r}
+boxplot(CRELIM~goodbad, data=inner_merged)
+legend(0.6,34,"0=good") # to add the legend
+title("Credit Limit by GOODBAD") # to add chart title
+```
+
+```{r}
+t.test(CRELIM~goodbad, data=inner_merged)
+```
+# Part 6: Modeling 
+
+======================================
+
+#### 6.1 Variable Selection
+#### 6.2 Train Test Split
+#### 6.3 Logistic Regression
+#### 6.4 Linear Regression
+
+======================================
+
+#### 6.1 Variable Selection
+```{r}
+inner_merged_copy <- subset(inner_merged, select=-c(DELQID, MATCHKEY))
+```
+
+```{r}
+head(inner_merged_copy)
+```
+#### 6.2 Train Test Split
+
+```{r}
+# install the package only if it is not installed
+if (!require(caTools)) { 
+  install.packages("caTools")
+} 
+```
+
+```{r}
+library(caTools)
+```
+
+```{r}
+set.seed(100)
+split <- sample.split(inner_merged_copy$goodbad, SplitRatio = 0.7)
+```
+
+```{r}
+#get training and test data
+trainingData <- subset(inner_merged_copy, split == TRUE)
+testData <- subset(inner_merged_copy, split == FALSE)
+trainingData$goodbad <- as.factor(trainingData$goodbad)
+testData$goodbad <- as.factor(testData$goodbad)
+```
+
+```{r}
+head(trainingData)
+```
+
+```{r}
+dim(trainingData)
+```
+
+```{r}
+head(testData)
+```
+
+```{r}
+dim(testData)
+```
+
+
+#### 6.3 Logistic Regression Model
+
+##### the dependent variable is categorical/binary
+```{r}
+# train model
+logistic_model <- glm(goodbad ~ RBAL + TRADES
+ + AGE + CRELIM , data=trainingData, family=binomial(link="logit"))
+```
+
+```{r}
+summary(logistic_model)
+```
+
+```{r}
+# predicted probability on the test data
+testData$logisticProba <- predict(logistic_model, testData, type="response")
+# testData$logisticProba <- plogis(predict(logistic_model, testData))
+```
+
+```{r}
+head(testData)
+```
+
+```{r}
+describe(testData$goodbad)
+```
+
+```{r}
+testData$logisticPrediction <- cut(testData$logisticProba, breaks=c(0, 0.187, 1), labels=c(0,1))
+```
+
+```{r}
+head(testData)
+```
+
+```{r}
+# install the package only if it is not installed
+if (!require(InformationValue)) { 
+  install.packages("InformationValue")
+} 
+```
+
+```{r}
+library(InformationValue)
+```
+
+```{r}
+plotROC(testData$goodbad, testData$logisticProba)
+```
+
+```{r}
+# install the package only if it is not installed
+if (!require(caret)) { 
+  install.packages("caret")
+} 
+```
+
+```{r}
+library(caret)
+```
+
+```{r}
+cm <- confusionMatrix(testData$logisticPrediction, testData$goodbad, positive="1")
+cm
+```
+```{r}
+?confusionMatrix
+```
+
+
+```{r}
+str(cm)
+```
+
+```{r}
+accuracy <- cm$overall[["Accuracy"]]
+print(paste0("Accuracy: ", accuracy * 100, "%"))
+type_I_error <- 1- cm$byClass[["Specificity"]]
+print(paste0("Type I Error: ", type_I_error*100, "%"))
+type_II_error <- 1 - cm$byClass[["Sensitivity"]]
+print(paste0("Type II Error: ", type_II_error*100, "%"))
+```
+
+```{r}
+?paste0
+```
+
+```{r}
+for (cutoff in seq(0.000001, 0.999999, 0.1)){
+  print(paste0("cutoff: ", cutoff))
+  testData$logisticPrediction <- cut(testData$logisticProba, breaks=c(0, cutoff, 1), labels=c(0,1))
+  cm <- confusionMatrix(testData$logisticPrediction, testData$goodbad, positive="1")
+  accuracy <- cm$overall[["Accuracy"]]
+  print(paste0("Accuracy: ", accuracy * 100, "%"))
+  # type I error = false positive rate; specificity = true negative rate
+  type_I_error <- 1- cm$byClass[["Specificity"]]
+  print(paste0("Type I Error: ", type_I_error*100, "%"))
+  # type II error = false negative rate; sensitivity = true positive rate
+  type_II_error <- 1 - cm$byClass[["Sensitivity"]]
+  print(paste0("Type II Error: ", type_II_error*100, "%" ))
+  cat("\n")
+}
+```
+
+
+
+for more information on confusion matrix, refer to 
+https://www.dataschool.io/simple-guide-to-confusion-matrix-terminology/
+https://en.wikipedia.org/wiki/Confusion_matrix
+
+
+for more tutorials on handling class imbalance problem, refer to 
+https://www.r-bloggers.com/handling-class-imbalance-with-r-and-caret-caveats-when-using-the-auc/
+https://www.analyticsvidhya.com/blog/2016/03/practical-guide-deal-imbalanced-classification-problems/
+
+#### 6.4 Linear Regression Model
+
+##### the dependent variable is continuous
+
+```{r}
+data(mtcars)
+?mtcars
+```
+
+```{r}
+head(mtcars)
+```
+
+```{r}
+str(mtcars)
+```
+
+```{r}
+summary(mtcars)
+```
+
+##### Check scatter plot matrix
+```{r}
+png(file="plot_matrix.png",width=2000, height=1700)
+plot(mtcars)
+```
+
+##### Specify and estimate the model
+```{r}
+lm(mpg ~ wt + drat, data=mtcars)
+```
+
+```{r}
+mtfit <- lm(mpg~wt + drat,data=mtcars)
+```
+
+##### Inference on the model parameters
+```{r}
+summary(mtfit)
+```
+
+```{r}
+summary.mtfit <- summary(mtfit)
+```
+
+```{r}
+names(mtfit)
+```
+
+```{r}
+names(summary.mtfit)
+```
+
+```{r}
+mtfit$coefficients
+```
+
+```{r}
+mtfit$coef 
+```
+
+```{r}
+summary.mtfit$coefficients
+```
+
+```{r}
+summary.mtfit$coef
+```
+##### Check the design matrix
+```{r}
+model.matrix(mtfit)
+```
+
+##### with/without the intercept
+```{r}
+lm(mpg ~ 1+wt+drat, data=mtcars)
+```
+
+```{r}
+lm(mpg ~ -1 +wt+drat,data=mtcars)
+```
+##### Add the quadratic term
+```{r}
+lm(mpg ~ wt+ I(wt^2), data=mtcars)
+```
+##### Update the model
+```{r}
+mtfit2 <- update(mtfit, .~. -wt)
+```
+
+```{r}
+mtfit2
+```
+
+```{r}
+mtfit3 <- update(mtfit2, .~. + hp)
+```
+
+```{r}
+mtfit3
+```
+##### Compare different models based information criteria
+```{r}
+# the lower, the better
+AIC(mtfit)
+AIC(mtfit2)
+AIC(mtfit3)
+```
+
+```{r}
+# the lower, the better
+BIC(mtfit)
+BIC(mtfit2)
+BIC(mtfit3)
+```
+
+##### Compare simple and complex models based on ANOVA
+```{r}
+complexfit <- lm(mpg~wt+drat+hp+qsec+cyl, data=mtcars)
+simplefit <- lm(mpg~wt+drat,data=mtcars)
+```
+
+```{r}
+anova(simplefit,complexfit)
+```
+##### Check multicolinearity 
+```{r}
+fit1 <- lm(mpg~drat+qsec+wt,data=mtcars)
+```
+
+```{r}
+# install the package only if it is not installed
+if (!require(regclass)) { 
+  install.packages("regclass")
+} 
+```
+
+```{r}
+library(regclass)
+```
+
+```{r}
+VIF(fit1)
+```
+
+##### Diagnoise the model
+```{r}
+plot(fit1$fit,fit1$res,xlab="Fitted",ylab="Residuals", main="Residual-Fitted plot")
+abline(h=0)
+```
+
+```{r}
+qqnorm(resid(fit1))
+qqline(resid(fit1))
+```
+
+```{r}
+par(mfrow=c(2,2))
+plot(fit1)
+```
