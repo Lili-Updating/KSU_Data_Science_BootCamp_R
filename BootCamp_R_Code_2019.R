@@ -618,8 +618,6 @@ write.csv(d, file = "tw.csv", row.names=FALSE)
 
   ##### Preparation 
 
-# set the working directory
-setwd("/Users/lilizhang/OneDrive - Kennesaw State University/BOOTCAMP/BootCamp_R_2019")
 # load the datasets
 clean1a <- read.csv("CLEAN1A.csv", header = TRUE)
 clean1b <- read.csv("CLEAN1B.csv", header = TRUE)
@@ -796,8 +794,6 @@ pnorm(1,mean=0, sd=1, lower=FALSE) # the lower=FALSE option to get the probabili
 head(inner_merged)
 
 str(inner_merged)
-
-describe(inner_merged)
 
 
 #### 5.1 Univariate Analysis
